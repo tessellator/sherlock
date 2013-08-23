@@ -1,0 +1,26 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sherlock", "Sherlock\Sherlock.csproj", "{867BC8C4-9EF4-4AA5-8DE0-7B3D0DB0DACD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sherlock.Tests", "Sherlock.Tests\Sherlock.Tests.csproj", "{800B3855-A8B8-4838-B791-55A707846929}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{867BC8C4-9EF4-4AA5-8DE0-7B3D0DB0DACD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{867BC8C4-9EF4-4AA5-8DE0-7B3D0DB0DACD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{867BC8C4-9EF4-4AA5-8DE0-7B3D0DB0DACD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{867BC8C4-9EF4-4AA5-8DE0-7B3D0DB0DACD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{800B3855-A8B8-4838-B791-55A707846929}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{800B3855-A8B8-4838-B791-55A707846929}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{800B3855-A8B8-4838-B791-55A707846929}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{800B3855-A8B8-4838-B791-55A707846929}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
