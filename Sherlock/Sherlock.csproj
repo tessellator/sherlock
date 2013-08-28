@@ -39,10 +39,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Concurrent\ConcurrentDeque.cs" />
-    <Compile Include="Generic\BlockingQueue.cs" />
     <Compile Include="Generic\BoundedBuffer.cs" />
-    <Compile Include="Generic\Deque.cs" />
     <Compile Include="Generic\IBuffer.cs" />
     <Compile Include="Generic\IPipe.cs" />
     <Compile Include="Generic\IPipeReader.cs" />
@@ -53,6 +50,7 @@
     <Compile Include="Generic\PipedEnumerator.cs" />
     <Compile Include="Generic\PipeReader.cs" />
     <Compile Include="Generic\PipeWriter.cs" />
+    <Compile Include="Generic\UnboundedBuffer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

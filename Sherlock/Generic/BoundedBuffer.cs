@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,38 +9,33 @@ namespace Sherlock.Collections.Generic
    public class BoundedBuffer<T> : IBuffer<T>
    {
       private readonly long maxSize;
-      private readonly ConcurrentQueue<T> queue;
-      private long emptyCount;
-      private long fullCount;
+      private readonly Queue<T> queue;
+      private readonly object locker;
 
       public BoundedBuffer()
-         : this(long.MaxValue)
+         : this(100)
       {
       }
 
       public BoundedBuffer(long maxSize)
       {
          this.maxSize = maxSize;
-         this.queue = new ConcurrentQueue<T>();
+         this.queue = new Queue<T>();
+         this.locker = new object();
       }
 
       public void Put(T item)
       {
-         Interlocked.Decrement(ref emptyCount);
-         queue.Enqueue(item);
-         Interlocked.Increment(ref fullCount);
+         lock (locker)
+         {
+            queue.Enqueue(item);
+         }
       }
 
       public bool Take(out T item)
       {
-         var result = queue.TryDequeue(out item);
-         if (result)
-         {
-            Interlocked.Decrement(ref fullCount);
-            Interlocked.Increment(ref emptyCount);
-         }
-
-         return result;
+         item = queue.Dequeue(item);
+         return item;
       }
    }
 }

@@ -7,14 +7,14 @@ namespace Sherlock.Collections.Generic
 {
    class PipeReader<T> : IPipeReader<T>
    {
-      private readonly BlockingQueue<T> queue;
+      private readonly IBuffer<T> buffer;
       private bool isClosed;
 
       public event EventHandler Closed;
 
-      public PipeReader(BlockingQueue<T> queue)
+      public PipeReader(IBuffer<T> buffer)
       {
-         this.queue = queue;
+         this.buffer = buffer;
       }
 
       public void Dispose()
@@ -26,7 +26,7 @@ namespace Sherlock.Collections.Generic
       public bool Read(out T item)
       {
          item = default(T);
-         return !IsClosed && queue.Dequeue(out item);
+         return !IsClosed && buffer.Take(out item);
       }
 
       public bool IsClosed

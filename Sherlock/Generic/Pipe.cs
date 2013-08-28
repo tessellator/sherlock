@@ -7,27 +7,20 @@ namespace Sherlock.Collections.Generic
 {
    public static class Pipe
    {
-      public static IPipe<T> Open<T>() {
-         var queue = new BlockingQueue<T>();
-         return Open(queue);
+      public static IPipe<T> Open<T>()
+      {
+         return Open(new UnboundedBuffer<T>());
       }
 
       public static IPipe<T> Open<T>(long maxSize)
       {
-         var queue = new BlockingQueue<T>(maxSize);
-         return Open(queue);
+         return Open(new BoundedBuffer<T>(maxSize));
       }
 
       public static IPipe<T> Open<T>(IBuffer<T> buffer)
       {
-         var queue = new BlockingQueue<T>(buffer);
-         return Open(queue);
-      }
-
-      private static IPipe<T> Open<T>(BlockingQueue<T> queue)
-      {
-         var reader = new PipeReader<T>(queue);
-         var writer = new PipeWriter<T>(queue);
+         var reader = new PipeReader<T>(buffer);
+         var writer = new PipeWriter<T>(buffer);
 
          writer.SetReadCloseListener(reader);
 

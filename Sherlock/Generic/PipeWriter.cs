@@ -7,14 +7,14 @@ namespace Sherlock.Collections.Generic
 {
    class PipeWriter<T> : IPipeWriter<T>
    {
-      private readonly BlockingQueue<T> queue;
+      private readonly IBuffer<T> buffer;
       private bool isClosed;
 
       public event EventHandler Closed;
 
-      public PipeWriter(BlockingQueue<T> queue)
+      public PipeWriter(IBuffer<T> buffer)
       {
-         this.queue = queue;
+         this.buffer = buffer;
       }
 
       public void Dispose()
@@ -28,7 +28,7 @@ namespace Sherlock.Collections.Generic
          if (IsClosed)
             throw new PipeClosedException();
 
-         queue.Enqueue(item);
+         buffer.Put(item);
       }
 
       public void Close()
