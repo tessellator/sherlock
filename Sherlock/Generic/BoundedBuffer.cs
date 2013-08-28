@@ -6,36 +6,61 @@ using System.Threading;
 
 namespace Sherlock.Collections.Generic
 {
-   public class BoundedBuffer<T> : IBuffer<T>
-   {
-      private readonly long maxSize;
-      private readonly Queue<T> queue;
-      private readonly object locker;
+    public class BoundedBuffer<T> : IBuffer<T>
+    {
+        private readonly long maxSize;
+        private readonly Queue<T> queue;
+        private readonly object locker;
+        private ManualResetEvent canWrite;
 
-      public BoundedBuffer()
+        public long MaxSize { get { return maxSize; } }
+
+        public BoundedBuffer()
          : this(100)
-      {
-      }
+        {
+        }
 
-      public BoundedBuffer(long maxSize)
-      {
-         this.maxSize = maxSize;
-         this.queue = new Queue<T>();
-         this.locker = new object();
-      }
+        public BoundedBuffer(long maxSize)
+        {
+            this.maxSize = maxSize;
+            this.queue = new Queue<T>();
+            this.locker = new object();
+            this.canWrite = new ManualResetEvent(false);
+        }
 
-      public void Put(T item)
-      {
-         lock (locker)
-         {
-            queue.Enqueue(item);
-         }
-      }
+        public void Put(T item)
+        {
+            var success = false;
+            while (!success)
+            {
+                if (queue.Length == this.maxSize)
+                {
+                    this.canWrite.Reset();
+                    this.canWrite.WaitOne();
+                }
+                lock (locker)
+                {
+                    if (queue.Length < this.maxSize)
+                    {
+                        queue.Enqueue(item);
+                        success = true;
+                    }
+                }
+            }
+        }
 
-      public bool Take(out T item)
-      {
-         item = queue.Dequeue(item);
-         return item;
-      }
-   }
+        public bool Take(out T item)
+        {
+            lock (locker)
+            {
+                if (queue.Length > 0) {
+                    item = queue.Dequeue();
+                    this.canWrite.Set();
+                    return true;
+                }
+                item = default(T);
+                return false;
+            }
+        }
+    }
 }
