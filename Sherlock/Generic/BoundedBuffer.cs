@@ -22,6 +22,10 @@ namespace Sherlock.Collections.Generic
 
         public BoundedBuffer(long maxSize)
         {
+            if (maxSize < 1) 
+            {
+                throw new ArgumentException("Max size must be greater than 0");
+            }
             this.maxSize = maxSize;
             this.queue = new Queue<T>();
             this.locker = new object();
