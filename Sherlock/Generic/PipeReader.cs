@@ -26,7 +26,7 @@ namespace Sherlock.Collections.Generic
       public bool Read(out T item)
       {
          item = default(T);
-         return !IsClosed && buffer.Take(out item);
+         return !IsClosed && buffer.TryTake(out item);
       }
 
       public bool IsClosed

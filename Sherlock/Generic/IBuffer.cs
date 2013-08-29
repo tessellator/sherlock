@@ -8,6 +8,6 @@ namespace Sherlock.Collections.Generic
    public interface IBuffer<T>
    {
       void Put(T item);
-      bool Take(out T item);
+      bool TryTake(out T item);
    }
 }
