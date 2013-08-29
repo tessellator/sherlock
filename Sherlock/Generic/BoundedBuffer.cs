@@ -11,7 +11,7 @@ namespace Sherlock.Collections.Generic
         private readonly object locker;
         private readonly ManualResetEvent canWriteEvent;
         private readonly ManualResetEvent canReadEvent;
-        private readonly ManualResetEvent closedEvent;
+        private readonly ManualResetEvent disposedEvent;
         private bool disposed;
 
         public BoundedBuffer()
@@ -30,35 +30,47 @@ namespace Sherlock.Collections.Generic
             this.locker = new object();
             this.canWriteEvent = new ManualResetEvent(false);
             this.canReadEvent = new ManualResetEvent(false);
-            this.closedEvent = new ManualResetEvent(false);
+            this.disposedEvent = new ManualResetEvent(false);
         }
 
         public void Put(T item)
         {
-            var success = false;
-            while (!success)
+           if (!TryPut(new TimeSpan(-1), item))
+              throw new InvalidOperationException("The put operation failed.");
+        }
+
+        public T Take()
+        {
+            T item;
+            if (!TryTake(new TimeSpan(-1), out item))
+                throw new InvalidOperationException("The take operation failed");
+            return item;
+        }
+
+        public bool TryPut(TimeSpan timeout, T item)
+        {
+            while (true)
             {
                 if (queue.Count == this.maxSize)
                 {
                     this.canWriteEvent.Reset();
-                    this.canWriteEvent.WaitOne();
-                    var index = WaitHandle.WaitAny(new WaitHandle[] {this.canWriteEvent, closedEvent});
-                    if (index == 1)
-                        break;
+                    var index = WaitHandle.WaitAny(new WaitHandle[] { this.canWriteEvent, disposedEvent }, timeout);
+                    if (index == 1 || index == WaitHandle.WaitTimeout)
+                        return false;
                 }
                 lock (locker)
                 {
                     if (queue.Count < this.maxSize)
                     {
                         queue.Enqueue(item);
-                        success = true;
                         this.canReadEvent.Set();
+                        return true;
                     }
                 }
             }
         }
 
-        public bool TryTake(out T item)
+        public bool TryTake(TimeSpan timeout, out T item)
         {
             item = default(T);
             while (true)
@@ -66,9 +78,8 @@ namespace Sherlock.Collections.Generic
                 if (queue.Count == 0)
                 {
                     this.canReadEvent.Reset();
-                    this.canReadEvent.WaitOne();
-                    var index = WaitHandle.WaitAny(new WaitHandle[] {this.canReadEvent, closedEvent});
-                    if (index == 1)
+                    var index = WaitHandle.WaitAny(new WaitHandle[] { this.canReadEvent, disposedEvent }, timeout);
+                    if (index == 1 || index == WaitHandle.WaitTimeout)
                         return false;
                 }
                 lock (locker)
@@ -99,8 +110,8 @@ namespace Sherlock.Collections.Generic
         {
             if (disposing && !disposed)
             {
-                closedEvent.Set();
-                closedEvent.Dispose();
+                disposedEvent.Set();
+                disposedEvent.Dispose();
                 canWriteEvent.Dispose();
                 canReadEvent.Dispose();
             }
