@@ -1,0 +1,9 @@
+﻿<NUnitProject>
+  <Settings activeconfig="Debug" />
+  <Config name="Debug" binpathtype="Auto">
+    <assembly path="Sherlock.Tests\bin\Debug\Sherlock.Tests.dll" />
+  </Config>
+  <Config name="Release" binpathtype="Auto">
+    <assembly path="Sherlock.Tests\bin\Release\Sherlock.Tests.dll" />
+  </Config>
+</NUnitProject>

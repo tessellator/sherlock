@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading;
+using Sherlock.Generic;
 
 namespace Sherlock.Collections.Generic
 {
@@ -9,8 +10,8 @@ namespace Sherlock.Collections.Generic
         private readonly long maxSize;
         private readonly Queue<T> queue;
         private readonly object locker;
-        private readonly ManualResetEvent canWriteEvent;
-        private readonly ManualResetEvent canReadEvent;
+        private readonly ManualResetEventSlim canWriteEvent;
+        private readonly ManualResetEventSlim canReadEvent;
         private readonly ManualResetEvent disposedEvent;
         private bool disposed;
 
@@ -28,21 +29,21 @@ namespace Sherlock.Collections.Generic
             this.maxSize = maxSize;
             this.queue = new Queue<T>();
             this.locker = new object();
-            this.canWriteEvent = new ManualResetEvent(false);
-            this.canReadEvent = new ManualResetEvent(false);
+            this.canWriteEvent = new ManualResetEventSlim(false);
+            this.canReadEvent = new ManualResetEventSlim(false);
             this.disposedEvent = new ManualResetEvent(false);
         }
 
         public void Put(T item)
         {
-           if (!TryPut(new TimeSpan(-1), item))
+           if (!TryPut(TimeOut.Indefinite, item))
               throw new InvalidOperationException("The put operation failed.");
         }
 
         public T Take()
         {
             T item;
-            if (!TryTake(new TimeSpan(-1), out item))
+            if (!TryTake(TimeOut.Indefinite, out item))
                 throw new InvalidOperationException("The take operation failed");
             return item;
         }
@@ -54,7 +55,7 @@ namespace Sherlock.Collections.Generic
                 if (queue.Count == this.maxSize)
                 {
                     this.canWriteEvent.Reset();
-                    var index = WaitHandle.WaitAny(new WaitHandle[] { this.canWriteEvent, disposedEvent }, timeout);
+                    var index = WaitHandle.WaitAny(new[] { this.canWriteEvent.WaitHandle, disposedEvent }, timeout);
                     if (index == 1 || index == WaitHandle.WaitTimeout)
                         return false;
                 }
@@ -78,7 +79,7 @@ namespace Sherlock.Collections.Generic
                 if (queue.Count == 0)
                 {
                     this.canReadEvent.Reset();
-                    var index = WaitHandle.WaitAny(new WaitHandle[] { this.canReadEvent, disposedEvent }, timeout);
+                    var index = WaitHandle.WaitAny(new[] { this.canReadEvent.WaitHandle, disposedEvent }, timeout);
                     if (index == 1 || index == WaitHandle.WaitTimeout)
                         return false;
                 }
@@ -118,9 +119,6 @@ namespace Sherlock.Collections.Generic
             disposed = true;
         }
 
-        #region IBuffer<T> Members
-
-
         public bool TryPut(T item)
         {
             return TryPut(new TimeSpan(-1), item);
@@ -130,7 +128,5 @@ namespace Sherlock.Collections.Generic
         {
             return TryTake(new TimeSpan(-1), out item);
         }
-
-        #endregion
     }
 }

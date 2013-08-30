@@ -51,6 +51,7 @@
     <Compile Include="Generic\PipeReader.cs" />
     <Compile Include="Generic\PipeWriter.cs" />
     <Compile Include="Generic\SlidingBuffer.cs" />
+    <Compile Include="Generic\Timeout.cs" />
     <Compile Include="Generic\UnboundedBuffer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

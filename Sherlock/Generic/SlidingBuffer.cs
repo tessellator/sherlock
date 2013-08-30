@@ -74,26 +74,26 @@ namespace Sherlock.Generic
         public T Take()
         {
             T item;
-            if (!TryTake(new TimeSpan(-1), out item))
+            if (!TryTake(TimeOut.Indefinate, out item))
                 throw new InvalidOperationException("The take operation failed");
             return item;
         }
 
         public void Put(T item)
         {
-            if (!TryPut(new TimeSpan(-1), item))
+            if (!TryPut(TimeOut.Indefinate, item))
                 throw new InvalidOperationException("The put operation failed");
 
         }
 
         public bool TryPut(T item)
         {
-            return TryPut(new TimeSpan(-1), item);
+            return TryPut(TimeOut.Indefinate, item);
         }
 
         public bool TryTake(out T item)
         {
-            return TryTake(new TimeSpan(-1), out item);
+            return TryTake(TimeOut.Indefinate, out item);
         }
 
         ~SlidingBuffer()
