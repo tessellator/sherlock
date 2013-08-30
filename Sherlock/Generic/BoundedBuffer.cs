@@ -115,6 +115,22 @@ namespace Sherlock.Collections.Generic
                 canWriteEvent.Dispose();
                 canReadEvent.Dispose();
             }
+            disposed = true;
         }
+
+        #region IBuffer<T> Members
+
+
+        public bool TryPut(T item)
+        {
+            return TryPut(new TimeSpan(-1), item);
+        }
+
+        public bool TryTake(out T item)
+        {
+            return TryTake(new TimeSpan(-1), out item);
+        }
+
+        #endregion
     }
 }

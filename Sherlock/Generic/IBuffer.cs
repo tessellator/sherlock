@@ -9,6 +9,8 @@ namespace Sherlock.Collections.Generic
    {
       void Put(T item);
       T Take();
+      bool TryPut(T item);
+      bool TryTake(out T item);
       bool TryPut(TimeSpan timeout, T item);
       bool TryTake(TimeSpan timeout, out T item);
    }
