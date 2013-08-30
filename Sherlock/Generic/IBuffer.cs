@@ -5,13 +5,15 @@ using System.Text;
 
 namespace Sherlock.Collections.Generic
 {
-   public interface IBuffer<T>
-   {
-      void Put(T item);
-      T Take();
-      bool TryPut(T item);
-      bool TryTake(out T item);
-      bool TryPut(TimeSpan timeout, T item);
-      bool TryTake(TimeSpan timeout, out T item);
-   }
+    public interface IBuffer<T>
+    {
+        void Put(T item);
+        T Take();
+        void Put(TimeSpan timeout, T item);
+        T Take(TimeSpan timeout);
+        bool TryPut(T item);
+        bool TryTake(out T item);
+        bool TryPut(TimeSpan timeout, T item);
+        bool TryTake(TimeSpan timeout, out T item);
+    }
 }

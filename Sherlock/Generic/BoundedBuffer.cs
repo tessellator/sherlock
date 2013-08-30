@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading;
-using Sherlock.Generic;
 
 namespace Sherlock.Collections.Generic
 {
@@ -36,20 +35,19 @@ namespace Sherlock.Collections.Generic
 
         public void Put(T item)
         {
-           if (!TryPut(TimeOut.Indefinite, item))
-              throw new InvalidOperationException("The put operation failed.");
+            Put(TimeOut.Indefinite, item);
         }
 
         public T Take()
         {
-            T item;
-            if (!TryTake(TimeOut.Indefinite, out item))
-                throw new InvalidOperationException("The take operation failed");
-            return item;
+            return Take(TimeOut.Indefinite);
         }
 
         public bool TryPut(TimeSpan timeout, T item)
         {
+            if (disposed)
+                throw new ObjectDisposedException("The bounded buffer has been disposed");
+
             while (true)
             {
                 if (queue.Count == this.maxSize)
@@ -73,6 +71,9 @@ namespace Sherlock.Collections.Generic
 
         public bool TryTake(TimeSpan timeout, out T item)
         {
+            if (disposed)
+                throw new ObjectDisposedException("The bounded buffer has been disposed");
+
             item = default(T);
             while (true)
             {
@@ -121,12 +122,27 @@ namespace Sherlock.Collections.Generic
 
         public bool TryPut(T item)
         {
-            return TryPut(new TimeSpan(-1), item);
+            return TryPut(TimeOut.Indefinite, item);
         }
 
         public bool TryTake(out T item)
         {
-            return TryTake(new TimeSpan(-1), out item);
+            return TryTake(TimeOut.Indefinite, out item);
+        }
+
+        public void Put(TimeSpan timeout, T item)
+        {
+           if (!TryPut(timeout, item))
+              throw new InvalidOperationException("The put operation failed");
+
+        }
+
+        public T Take(TimeSpan timeout)
+        {
+            T item;
+            if (!TryTake(timeout, out item))
+                throw new InvalidOperationException("The take operation failed");
+            return item;
         }
     }
 }

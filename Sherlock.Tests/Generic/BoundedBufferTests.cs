@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using NUnit.Framework;
 using Sherlock.Collections.Generic;
 
-namespace Sherlock.Tests
+namespace Sherlock.Collections.Generic.Tests
 {
 
     [TestFixture]
@@ -122,6 +122,17 @@ namespace Sherlock.Tests
         }
 
         [Test]
+        [ExpectedException(typeof(ArgumentException))]
+        public void Constructor_WithZeroMaxSize()
+        {
+            // Act
+            new BoundedBuffer<int>(0);
+
+            // Assert
+            Assert.Fail("Failed to throw exception when size is not a positive integer.");
+        }
+
+        [Test]
         public void TryPut_WithFullBuffer()
         {
             // Assert
@@ -144,10 +155,65 @@ namespace Sherlock.Tests
             int item;
 
             // Arrange
-            success = boundedBuffer.TryTake(out item);
+            success = boundedBuffer.TryTake(new TimeSpan(50), out item);
 
             // Assert
             Assert.IsFalse(success);
+        }
+        
+        [Test]
+        [ExpectedException(typeof(InvalidOperationException))]
+        public void Put_WithFullBuffer()
+        {
+            // Assert
+            boundedBuffer.Put(5);
+            boundedBuffer.Put(5);
+
+            // Act
+            boundedBuffer.Put(new TimeSpan(50), 5);
+
+            // Assert
+            Assert.Fail("Failed to throw exception when operation fails");
+        }
+
+        [Test]
+        [ExpectedException(typeof(InvalidOperationException))]
+        public void Take_WithEmptyBuffer()
+        {
+            // Act 
+            boundedBuffer.Take(new TimeSpan(50));
+
+            // Assert
+            Assert.Fail("Failed to throw an exception when operation fails.");
+        }
+
+        [Test]
+        [ExpectedException(typeof(ObjectDisposedException))]
+        public void TryTake_WhenDisposed()
+        {
+            // Arrange
+            boundedBuffer.Dispose();
+
+            // Act
+            int item;
+            boundedBuffer.TryTake(out item);
+
+            // Assert
+            Assert.Fail("Failed to raise exception when buffer is disposed.");
+        }
+
+        [Test]
+        [ExpectedException(typeof(ObjectDisposedException))]
+        public void TryPut_WhenDisposed()
+        {
+            // Arrange
+            boundedBuffer.Dispose();
+
+            // Act
+            boundedBuffer.TryPut(0);
+
+            // Assert
+            Assert.Fail("Failed to raise exception when buffer is disposed.");
         }
 
         /// <summary>

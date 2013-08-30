@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using Sherlock.Collections.Generic;
 using System.Threading;
 
-namespace Sherlock.Generic
+namespace Sherlock.Collections.Generic
 {
     public class SlidingBuffer<T> : IBuffer<T>, IDisposable
     {
@@ -73,27 +73,36 @@ namespace Sherlock.Generic
 
         public T Take()
         {
+            return Take(TimeOut.Indefinite);
+        }
+
+        public void Put(TimeSpan timeout, T item)
+        {
+            if (!TryPut(timeout, item))
+                throw new InvalidOperationException("The put operation failed");
+        }
+
+        public T Take(TimeSpan timeout)
+        {
             T item;
-            if (!TryTake(new TimeSpan(-1), out item))
+            if (!TryTake(timeout, out item))
                 throw new InvalidOperationException("The take operation failed");
             return item;
         }
 
         public void Put(T item)
         {
-            if (!TryPut(new TimeSpan(-1), item))
-                throw new InvalidOperationException("The put operation failed");
-
+            Put(TimeOut.Indefinite, item);
         }
 
         public bool TryPut(T item)
         {
-            return TryPut(new TimeSpan(-1), item);
+            return TryPut(TimeOut.Indefinite, item);
         }
 
         public bool TryTake(out T item)
         {
-            return TryTake(new TimeSpan(-1), out item);
+            return TryTake(TimeOut.Indefinite, out item);
         }
 
         ~SlidingBuffer()

@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using NUnit.Framework;
-using Sherlock.Generic;
+using Sherlock.Collections.Generic;
 
-namespace Sherlock.Tests.Generic
+namespace Sherlock.Collections.Generic.Tests
 {
     [TestFixture]
     public class SlidingBufferTests
