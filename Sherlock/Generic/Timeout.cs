@@ -7,6 +7,6 @@ namespace Sherlock.Generic
 {
     public static class TimeOut
     {
-        public static TimeSpan Indefinate { get { return new TimeSpan(0, 0, 0, 0, -1); } }
+        public static TimeSpan Indefinite { get { return new TimeSpan(0, 0, 0, 0, -1); } }
     }
 }

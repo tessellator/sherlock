@@ -8,12 +8,12 @@ namespace Sherlock.Generic
 {
     public class SlidingBuffer<T> : IBuffer<T>, IDisposable
     {
-        private long maxSize;
-        private Queue<T> queue;
-        private object locker;
+        private readonly long maxSize;
+        private readonly Queue<T> queue;
+        private readonly object locker;
         private bool disposed;
-        private ManualResetEvent canReadEvent;
-        private ManualResetEvent disposedEvent;
+        private readonly ManualResetEvent canReadEvent;
+        private readonly ManualResetEvent disposedEvent;
 
         public SlidingBuffer(long maxSize)
         {
@@ -74,26 +74,26 @@ namespace Sherlock.Generic
         public T Take()
         {
             T item;
-            if (!TryTake(TimeOut.Indefinate, out item))
+            if (!TryTake(new TimeSpan(-1), out item))
                 throw new InvalidOperationException("The take operation failed");
             return item;
         }
 
         public void Put(T item)
         {
-            if (!TryPut(TimeOut.Indefinate, item))
+            if (!TryPut(new TimeSpan(-1), item))
                 throw new InvalidOperationException("The put operation failed");
 
         }
 
         public bool TryPut(T item)
         {
-            return TryPut(TimeOut.Indefinate, item);
+            return TryPut(new TimeSpan(-1), item);
         }
 
         public bool TryTake(out T item)
         {
-            return TryTake(TimeOut.Indefinate, out item);
+            return TryTake(new TimeSpan(-1), out item);
         }
 
         ~SlidingBuffer()
