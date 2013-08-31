@@ -44,6 +44,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Generic\BoundedBufferTests.cs" />
+    <Compile Include="Generic\PipeTests.cs" />
     <Compile Include="Generic\SlidingBufferTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
