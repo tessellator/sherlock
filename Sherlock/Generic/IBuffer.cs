@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Sherlock.Collections.Generic
 {
-    public interface IBuffer<T>
+    public interface IBuffer<T> : IDisposable
     {
         void Put(T item);
         T Take();

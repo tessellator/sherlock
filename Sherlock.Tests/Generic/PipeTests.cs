@@ -19,7 +19,7 @@ namespace Sherlock.Tests.Generic
         [SetUp]
         public void SetUp()
         {
-            pipe = Pipe.Open<int>();
+            pipe = Pipe.Open<int>(2);
             doneEvent = new ManualResetEvent(false);
         }
 
@@ -120,22 +120,6 @@ namespace Sherlock.Tests.Generic
 
             // Assert
             Assert.AreEqual(45, result);
-        }
-
-        /// <summary>
-        /// Since Parallel.Invoke does not guarantee the actions will
-        /// run on separate threads, use this helper class. 
-        /// </summary>
-        private static class ParallelThread
-        {
-            public static void Invoke(params Action[] actions)
-            {
-                foreach (var action in actions)
-                {
-                    var thread = new Thread(new ThreadStart(action));
-                    thread.Start();
-                }
-            }
         }
     }
 }
