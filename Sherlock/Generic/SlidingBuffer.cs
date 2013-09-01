@@ -12,7 +12,7 @@ namespace Sherlock.Collections.Generic
         private readonly Queue<T> queue;
         private readonly object locker;
         private bool disposed;
-        private readonly ManualResetEvent canReadEvent;
+        private readonly ManualResetEventSlim canReadEvent;
         private readonly ManualResetEvent disposedEvent;
 
         public SlidingBuffer(long maxSize)
@@ -26,7 +26,7 @@ namespace Sherlock.Collections.Generic
             this.queue = new Queue<T>();
             this.locker = new object();
             this.disposed = false;
-            this.canReadEvent = new ManualResetEvent(false);
+            this.canReadEvent = new ManualResetEventSlim(false);
             this.disposedEvent = new ManualResetEvent(false);
         }
 
@@ -52,11 +52,13 @@ namespace Sherlock.Collections.Generic
             item = default(T);
             while (true)
             {
+                if (disposed)
+                    return false;
+
                 if (queue.Count == 0)
                 {
                     this.canReadEvent.Reset();
-                    var index = WaitHandle.WaitAny(new WaitHandle[] {this.canReadEvent, this.disposedEvent}, timeout);
-
+                    var index = WaitHandle.WaitAny(new[] {this.canReadEvent.WaitHandle, this.disposedEvent}, timeout);
                     if (index == 1 || index == WaitHandle.WaitTimeout)
                         return false;
                 }
@@ -78,12 +80,18 @@ namespace Sherlock.Collections.Generic
 
         public void Put(TimeSpan timeout, T item)
         {
+            if (disposed)
+                throw new ObjectDisposedException("The sliding buffer has been disposed");
+
             if (!TryPut(timeout, item))
                 throw new InvalidOperationException("The put operation failed");
         }
 
         public T Take(TimeSpan timeout)
         {
+            if (disposed)
+                throw new ObjectDisposedException("The sliding buffer has been disposed");
+
             T item;
             if (!TryTake(timeout, out item))
                 throw new InvalidOperationException("The take operation failed");

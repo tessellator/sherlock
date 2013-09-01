@@ -88,14 +88,13 @@ namespace Sherlock.Collections.Generic.Tests
 
         [Test]
         [ExpectedException(typeof(ObjectDisposedException))]
-        public void TryTake_WhenDisposed()
+        public void Take_WhenDisposed()
         {
             // Arrange
             boundedBuffer.Dispose();
 
             // Act
-            int item;
-            boundedBuffer.TryTake(out item);
+            boundedBuffer.Take();
 
             // Assert
             Assert.Fail("Failed to raise exception when buffer is disposed.");
@@ -103,13 +102,13 @@ namespace Sherlock.Collections.Generic.Tests
 
         [Test]
         [ExpectedException(typeof(ObjectDisposedException))]
-        public void TryPut_WhenDisposed()
+        public void Put_WhenDisposed()
         {
             // Arrange
             boundedBuffer.Dispose();
 
             // Act
-            boundedBuffer.TryPut(0);
+            boundedBuffer.Put(0);
 
             // Assert
             Assert.Fail("Failed to raise exception when buffer is disposed.");

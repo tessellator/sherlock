@@ -45,12 +45,12 @@ namespace Sherlock.Collections.Generic
 
         public bool TryPut(TimeSpan timeout, T item)
         {
-            if (disposed)
-                throw new ObjectDisposedException("The bounded buffer has been disposed");
-
             while (true)
             {
-                if (queue.Count == this.maxSize)
+                if (disposed)
+                    return false;
+
+                if (queue.Count >= this.maxSize)
                 {
                     this.canWriteEvent.Reset();
                     var index = WaitHandle.WaitAny(new[] { this.canWriteEvent.WaitHandle, disposedEvent }, timeout);
@@ -71,12 +71,12 @@ namespace Sherlock.Collections.Generic
 
         public bool TryTake(TimeSpan timeout, out T item)
         {
-            if (disposed)
-                throw new ObjectDisposedException("The bounded buffer has been disposed");
-
             item = default(T);
             while (true)
             {
+                if (disposed)
+                    return false;
+
                 if (queue.Count == 0)
                 {
                     this.canReadEvent.Reset();
@@ -132,13 +132,19 @@ namespace Sherlock.Collections.Generic
 
         public void Put(TimeSpan timeout, T item)
         {
-           if (!TryPut(timeout, item))
-              throw new InvalidOperationException("The put operation failed");
+            if (disposed)
+                throw new ObjectDisposedException("The bounded buffer has been disposed");
+
+            if (!TryPut(timeout, item))
+                throw new InvalidOperationException("The put operation failed");
 
         }
 
         public T Take(TimeSpan timeout)
         {
+            if (disposed)
+                throw new ObjectDisposedException("The bounded buffer has been disposed");
+
             T item;
             if (!TryTake(timeout, out item))
                 throw new InvalidOperationException("The take operation failed");

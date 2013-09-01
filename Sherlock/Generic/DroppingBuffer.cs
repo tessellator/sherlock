@@ -38,12 +38,18 @@ namespace Sherlock.Collections.Generic
 
         public void Put(TimeSpan timeout, T item)
         {
+            if (disposed)
+                throw new ObjectDisposedException("The dropping buffer has been disposed");
+
             if (!TryPut(timeout, item))
                 throw new InvalidOperationException("Put operation failed");
         }
 
         public T Take(TimeSpan timeout)
         {
+            if (disposed)
+                throw new ObjectDisposedException("The dropping buffer has been disposed");
+
             T item;
             if (!TryTake(timeout, out item))
                 throw new InvalidOperationException("Take operation failed");
@@ -62,6 +68,9 @@ namespace Sherlock.Collections.Generic
 
         public bool TryPut(TimeSpan timeout, T item)
         {
+            if (disposed)
+                return false;
+
             lock (locker)
             {
                 if (this.maxSize > queue.Count)
@@ -79,16 +88,19 @@ namespace Sherlock.Collections.Generic
             item = default(T);
             while (true)
             {
+                if (disposed)
+                    return false;
+
                 if (queue.Count == 0)
                 {
-                    canRead.Reset();
-                    var index = WaitHandle.WaitAny(new[] {canRead.WaitHandle, disposedEvent}, timeout);
+                    this.canRead.Reset();
+                    var index = WaitHandle.WaitAny(new[] { this.canRead.WaitHandle, disposedEvent }, timeout);
                     if (index == 1 || index == WaitHandle.WaitTimeout)
                         return false;
                 }
                 lock (locker)
                 {
-                    if (queue.Count < this.maxSize)
+                    if (queue.Count > 0)
                     {
                         item = queue.Dequeue();
                         return true;
