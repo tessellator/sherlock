@@ -50,7 +50,11 @@ namespace Sherlock
 
         public void SetWriteCloseListener(PipeWriter<T> writer)
         {
-           writer.Closed += (o, e) => { readyToClose = true; };
+           writer.Closed += (o, e) => {
+              readyToClose = true;
+              if (buffer.IsEmpty())
+                 Close();
+           };
         }
     }
 }
