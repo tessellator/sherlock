@@ -7,122 +7,24 @@ using Sherlock.Collections.Generic;
 
 namespace Sherlock.Collections.Generic
 {
-    public class DroppingBuffer<T> : IBuffer<T>, IDisposable
+    public class DroppingBuffer<T> : Buffer<T>
     {
-        private readonly object locker;
         private readonly long maxSize;
-        private readonly Queue<T> queue;
-        private readonly ManualResetEventSlim canRead;
-        private readonly ManualResetEvent disposedEvent;
-        private bool disposed;
 
         public DroppingBuffer(long maxSize)
         {
             this.maxSize = maxSize;
-            this.locker = new object();
-            this.queue = new Queue<T>();
-            this.canRead = new ManualResetEventSlim(false);
-            this.disposedEvent = new ManualResetEvent(false);
-            this.disposed = false;
         }
 
-        public void Put(T item)
+        protected override bool Put(Queue<T> queue, T item)
         {
-            Put(TimeOut.Indefinite, item);
-        }
+           if (queue.Count < maxSize)
+           {
+              queue.Enqueue(item);
+              return true;
+           }
 
-        public T Take()
-        {
-            return Take(TimeOut.Indefinite);
-        }
-
-        public void Put(TimeSpan timeout, T item)
-        {
-            if (disposed)
-                throw new ObjectDisposedException("The dropping buffer has been disposed");
-
-            if (!TryPut(timeout, item))
-                throw new InvalidOperationException("Put operation failed");
-        }
-
-        public T Take(TimeSpan timeout)
-        {
-            if (disposed)
-                throw new ObjectDisposedException("The dropping buffer has been disposed");
-
-            T item;
-            if (!TryTake(timeout, out item))
-                throw new InvalidOperationException("Take operation failed");
-            return item;
-        }
-
-        public bool TryPut(T item)
-        {
-            return TryPut(TimeOut.Indefinite, item);
-        }
-
-        public bool TryTake(out T item)
-        {
-            return TryTake(TimeOut.Indefinite, out item);
-        }
-
-        public bool TryPut(TimeSpan timeout, T item)
-        {
-            if (disposed)
-                return false;
-
-            lock (locker)
-            {
-                if (this.maxSize > queue.Count)
-                {
-                    queue.Enqueue(item);
-                    this.canRead.Set();
-                    return true;
-                }
-                return false;
-            }
-        }
-
-        public bool TryTake(TimeSpan timeout, out T item)
-        {
-            item = default(T);
-            while (true)
-            {
-                if (disposed)
-                    return false;
-
-                if (queue.Count == 0)
-                {
-                    this.canRead.Reset();
-                    var index = WaitHandle.WaitAny(new[] { this.canRead.WaitHandle, disposedEvent }, timeout);
-                    if (index == 1 || index == WaitHandle.WaitTimeout)
-                        return false;
-                }
-                lock (locker)
-                {
-                    if (queue.Count > 0)
-                    {
-                        item = queue.Dequeue();
-                        return true;
-                    }
-                }
-            }
-        }
-
-        public void Dispose()
-        {
-            Dispose(true);
-        }
-
-        private void Dispose(bool disposing)
-        {
-            if (!disposed && disposing)
-            {
-                this.disposedEvent.Set();
-                this.canRead.Dispose();
-                this.disposedEvent.Dispose();
-            }
-            disposed = true;
+           return false;
         }
     }
 }
