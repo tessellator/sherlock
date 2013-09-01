@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace Sherlock
 {
@@ -23,12 +20,9 @@ namespace Sherlock
             GC.SuppressFinalize(this);
         }
 
-        public void Write(T item)
+        public bool Write(T item)
         {
-            if (IsClosed)
-                throw new PipeClosedException();
-
-            buffer.Put(item);
+            return !IsClosed && buffer.TryPut(item);
         }
 
         public void Close()

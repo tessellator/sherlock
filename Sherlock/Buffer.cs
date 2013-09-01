@@ -31,6 +31,9 @@ namespace Sherlock
             disposedEvent = new ManualResetEventSlim(false);
         }
 
+        /// <summary>
+        /// Cleans up after the buffer.
+        /// </summary>
         ~Buffer()
         {
             Dispose(false);
@@ -89,8 +92,9 @@ namespace Sherlock
         /// queue.</returns>
         ///
         /// <remarks>
-        /// This method is called in a thread-safe context with respect to the
-        /// queue.
+        /// <p>This method is called in a thread-safe context with respect to
+        /// the queue.</p>
+        /// <p>This method should not throw an exception.</p>
         /// </remarks>
         protected virtual bool CanPut(Queue<T> queue)
         {
@@ -206,6 +210,11 @@ namespace Sherlock
         /// <remarks>
         /// <p>This method is called in a thread-safe context with respect to
         /// the queue.</p>
+        ///
+        /// <p>This method should not throw an exception.</p>
+        ///
+        /// <p>This method is only called if <see cref="M:CanPut"/> returns
+        /// true.</p>
         ///
         /// <p>Implementors may manipulate the queue according to need.  For
         /// example, in a sliding buffer implentation the implementor may

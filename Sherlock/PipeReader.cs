@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace Sherlock
 {
@@ -26,8 +23,8 @@ namespace Sherlock
 
         public bool Read(out T item)
         {
-           if (buffer.IsEmpty() && readyToClose)
-              Close();
+            if (buffer.IsEmpty() && readyToClose)
+                Close();
 
             item = default(T);
             return !IsClosed && buffer.TryTake(out item);
@@ -50,11 +47,12 @@ namespace Sherlock
 
         public void SetWriteCloseListener(PipeWriter<T> writer)
         {
-           writer.Closed += (o, e) => {
-              readyToClose = true;
-              if (buffer.IsEmpty())
-                 Close();
-           };
+            writer.Closed += (o, e) =>
+            {
+                readyToClose = true;
+                if (buffer.IsEmpty())
+                    Close();
+            };
         }
     }
 }

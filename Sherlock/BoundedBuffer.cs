@@ -4,9 +4,9 @@ using System.Collections.Generic;
 namespace Sherlock
 {
     /// <summary>
-    /// A buffer that reaches blocks a producer when it reaches a maximum size.
+    /// A buffer that blocks a producer when it reaches a maximum size.
     /// </summary>
-    /// <typeparam name="T">The type of values to pass through the pipe.</typeparam>
+    /// <typeparam name="T">The type of value to store.</typeparam>
     /// <remarks>
     /// A bounded buffer is good for ensuring that a producer does not flood a
     /// pipe but also that the consumer reads every value.
@@ -29,7 +29,7 @@ namespace Sherlock
         /// <param name="maxSize">The maximum size of the buffer.</param>
         ///
         /// <exception cref="ArgumentException">
-        /// <paramref name="maxSize"/> was not a positive integer.
+        /// <paramref name="maxSize"/> is not a positive integer.
         /// </exception>
         public BoundedBuffer(long maxSize)
         {
@@ -47,11 +47,30 @@ namespace Sherlock
             get { return maxSize; }
         }
 
+        /// <summary>
+        /// Gets a value indicating whether a new value may be put into the
+        /// specified queue.
+        /// </summary>
+        /// <param name="queue">The queue to test.</param>
+        /// <returns>A value indicating whether the current buffer size
+        /// exceeds the maximum size.</returns>
         protected sealed override bool CanPut(Queue<T> queue)
         {
             return queue.Count < maxSize;
         }
 
+        /// <summary>
+        /// Puts the specified item into the specified queue.
+        /// </summary>
+        /// <param name="queue">
+        /// The queue into which the item should be put.
+        /// </param>
+        /// <param name="item">
+        /// The item to put into the queue.
+        /// </param>
+        /// <returns>
+        /// A value indicating success, always true.
+        /// </returns>
         protected sealed override bool Put(Queue<T> queue, T item)
         {
             queue.Enqueue(item);
