@@ -34,7 +34,6 @@ namespace Sherlock.Tests
         [Test]
         public void Test_SlowConsumer()
         {
-            // Assert
             int result = 0;
             producer = () =>
                 {
@@ -54,72 +53,39 @@ namespace Sherlock.Tests
                     doneEvent.Set();
                 };
 
-            // Act
             ParallelThread.Invoke(producer, consumer);
             doneEvent.WaitOne();
 
-            // Assert
             Assert.AreEqual(45, result);
-        }
-
-        [Test]
-        public void Test_ManyProducers()
-        {
-            // Assert
-            int result = 0;
-            producer = () =>
-                {
-                    for (int i = 0; i < 10; i++)
-                        pipe.Writer.Write(i);
-                };
-            consumer = () =>
-                {
-                    for (int i = 0; i < 30; i++)
-                    {
-                        int item;
-                        pipe.Reader.Read(out item);
-                        result += item;
-                    }
-                    doneEvent.Set();
-                };
-
-            // Act
-            ParallelThread.Invoke(producer, producer, producer, consumer);
-            doneEvent.WaitOne();
-
-            // Assert
-            Assert.AreEqual(45 * 3, result);
         }
 
         [Test]
         public void Test_SlowProducer()
         {
-            // Assert
             int result = 0;
             producer = () =>
                 {
                     for (int i = 0; i < 10; i++)
                     {
                         pipe.Writer.Write(i);
-                        Thread.Sleep(50);
+                        Thread.Sleep(5);
                     }
+
+                    pipe.Writer.Close();
                 };
             consumer = () =>
                 {
-                    for (int i = 0; i < 10; i++)
-                    {
-                        int item;
-                        pipe.Reader.Read(out item);
-                        result += item;
-                    }
+                   int item;
+
+                   while (pipe.Reader.Read(out item))
+                      result += item;
+
                     doneEvent.Set();
                 };
 
-            // Act
             ParallelThread.Invoke(producer, consumer);
             doneEvent.WaitOne();
 
-            // Assert
             Assert.AreEqual(45, result);
         }
     }

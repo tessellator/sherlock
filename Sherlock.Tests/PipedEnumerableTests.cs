@@ -23,10 +23,8 @@ namespace Sherlock.Tests
             producer = () =>
                 {
                     for (int i = 0; i < 10; i++)
-                    {
                         pipe.Writer.Write(i);
-                        Thread.Sleep(50);
-                    }
+
                     pipe.Writer.Close();
                 };
 
@@ -35,11 +33,9 @@ namespace Sherlock.Tests
         [Test]
         public void Test_GetEnumerator()
         {
-            // Act
             ParallelThread.Invoke(producer);
             var result = enumerable.Aggregate((x, y) => x + y);
 
-            // Assert
             Assert.AreEqual(45, result);
         }
     }
