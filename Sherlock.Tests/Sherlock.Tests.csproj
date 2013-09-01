@@ -43,12 +43,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Generic\BoundedBufferTests.cs" />
+    <Compile Include="BoundedBufferTests.cs" />
     <Compile Include="ParallelThread.cs" />
-    <Compile Include="Generic\PipedEnumerableTests.cs" />
-    <Compile Include="Generic\PipeTests.cs" />
-    <Compile Include="Generic\SlidingBufferTests.cs" />
+    <Compile Include="PipedEnumerableTests.cs" />
+    <Compile Include="PipeTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SlidingBufferTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -59,6 +59,7 @@
       <Name>Sherlock</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
