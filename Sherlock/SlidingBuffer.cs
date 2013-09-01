@@ -1,10 +1,10 @@
 using System;
 using System.Linq;
 using System.Collections.Generic;
-using Sherlock.Collections.Generic;
+using Sherlock;
 using System.Threading;
 
-namespace Sherlock.Collections.Generic
+namespace Sherlock
 {
     public class SlidingBuffer<T> : Buffer<T>
     {

@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using NUnit.Framework;
-using Sherlock.Collections.Generic;
+using Sherlock;
 
-namespace Sherlock.Tests.Generic
+namespace Sherlock.Tests
 {
     [TestFixture]
     public class PipeTests

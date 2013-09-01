@@ -5,9 +5,9 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using NUnit.Framework;
-using Sherlock.Collections.Generic;
+using Sherlock;
 
-namespace Sherlock.Collections.Generic.Tests
+namespace Sherlock.Tests
 {
     [TestFixture]
     class BoundedBufferTests

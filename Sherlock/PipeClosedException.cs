@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 
-namespace Sherlock.Collections.Generic
+namespace Sherlock
 {
    public class PipeClosedException : IOException
    {

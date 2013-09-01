@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 
-namespace Sherlock.Collections.Generic
+namespace Sherlock
 {
    public abstract class Buffer<T> : IBuffer<T>
    {

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Threading;
 
-namespace Sherlock.Collections.Generic
+namespace Sherlock
 {
    public class BoundedBuffer<T> : Buffer<T>
    {

@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading;
-using Sherlock.Collections.Generic;
+using Sherlock;
 
-namespace Sherlock.Collections.Generic
+namespace Sherlock
 {
     public class DroppingBuffer<T> : Buffer<T>
     {

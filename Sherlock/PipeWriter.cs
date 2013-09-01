@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Sherlock.Collections.Generic
+namespace Sherlock
 {
     class PipeWriter<T> : IPipeWriter<T>
     {

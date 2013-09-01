@@ -1,5 +1,5 @@
 ﻿
-namespace Sherlock.Collections.Generic
+namespace Sherlock
 {
    public class UnboundedBuffer<T> : BoundedBuffer<T>
    {
