@@ -36,6 +36,8 @@ class Program
         int item;
         while (reader.Read(out item))
             Console.WriteLine(item);
+
+        reader.Close();
     }
 
     static void Main(string[] args)
@@ -117,7 +119,6 @@ class Program
         // 37212
         // 54573
         // 79371
-
     }
 }
 ```
