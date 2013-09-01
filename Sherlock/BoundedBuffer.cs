@@ -21,6 +21,11 @@ namespace Sherlock
          this.maxSize = maxSize; 
       }
 
+      public long MaxSize
+      {
+         get { return maxSize; }
+      }
+
       protected override bool CanPut(Queue<T> queue)
       {
          return queue.Count < maxSize;

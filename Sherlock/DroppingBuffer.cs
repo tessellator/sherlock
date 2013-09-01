@@ -7,24 +7,32 @@ using Sherlock;
 
 namespace Sherlock
 {
-    public class DroppingBuffer<T> : Buffer<T>
-    {
-        private readonly long maxSize;
+   public class DroppingBuffer<T> : Buffer<T>
+   {
+      private readonly long maxSize;
 
-        public DroppingBuffer(long maxSize)
-        {
-            this.maxSize = maxSize;
-        }
+      public DroppingBuffer(long maxSize)
+      {
+         if (maxSize < 1)
+            throw new ArgumentException("Max size must be greater than 0.");
 
-        protected override bool Put(Queue<T> queue, T item)
-        {
-           if (queue.Count < maxSize)
-           {
-              queue.Enqueue(item);
-              return true;
-           }
+         this.maxSize = maxSize;
+      }
 
-           return false;
-        }
-    }
+      public long MaxSize
+      {
+         get { return maxSize; }
+      }
+
+      protected override bool Put(Queue<T> queue, T item)
+      {
+         if (queue.Count < maxSize)
+         {
+            queue.Enqueue(item);
+            return true;
+         }
+
+         return false;
+      }
+   }
 }

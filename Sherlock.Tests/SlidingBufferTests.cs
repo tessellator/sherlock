@@ -10,26 +10,47 @@ namespace Sherlock.Tests
     [TestFixture]
     public class SlidingBufferTests
     {
-        private SlidingBuffer<int> slidingBuffer;
+        private SlidingBuffer<int> buffer;
+        private TimeSpan timeout;
 
         [SetUp]
         public void SetUp()
         {
-            slidingBuffer = new SlidingBuffer<int>(2);
+            buffer = new SlidingBuffer<int>(3);
+            buffer.Put(1);
+            buffer.Put(2);
+            buffer.Put(3);
+
+            timeout = new TimeSpan(50);
         }
 
         [Test]
-        public void Put_WhenBufferIsFull()
+        public void Ctor_ProperlySetsMaxSize()
         {
-            // Arrange
-            slidingBuffer.Put(1);
-            slidingBuffer.Put(2);
-             
-            // Act
-            slidingBuffer.Put(3);
+           Assert.AreEqual(3, buffer.MaxSize);
+        }
 
-            // Assert
-            Assert.AreEqual(2, slidingBuffer.Take(), "Failed to drop the first element in the buffer.");
+        [Test]
+        [TestCase(0)]
+        [TestCase(-1)]
+        [ExpectedException(typeof(ArgumentException))]
+        public void Ctor_WithTooSmallMaxSize_ThrowsException(int size)
+        {
+           new SlidingBuffer<int>(size);
+        }
+
+        [Test]
+        public void Put_WhenQueueIsFull_ReturnsTrue()
+        {
+           var success = buffer.TryPut(timeout, 4);
+           Assert.IsTrue(success);
+        }
+
+        [Test]
+        public void Put_WhenQueueIsFull_SlidesQueue()
+        {
+           buffer.TryPut(timeout, 4);
+           CollectionAssert.AreEquivalent(new[] { 2, 3, 4 }, buffer.GetAllValues());
         }
     }
 }

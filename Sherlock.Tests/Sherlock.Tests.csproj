@@ -44,6 +44,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BoundedBufferTests.cs" />
+    <Compile Include="BufferExtensions.cs" />
+    <Compile Include="BufferTests.cs" />
+    <Compile Include="DroppingBufferTests.cs" />
     <Compile Include="ParallelThread.cs" />
     <Compile Include="PipedEnumerableTests.cs" />
     <Compile Include="PipeTests.cs" />
