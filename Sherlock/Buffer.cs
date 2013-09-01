@@ -9,12 +9,15 @@ namespace Sherlock
 {
    public abstract class Buffer<T> : IBuffer<T>
    {
+      private static readonly TimeSpan indefinite = new TimeSpan(0, 0, 0, 0, -1);
+
       private readonly object locker;
       private readonly Queue<T> queue;
       private readonly ManualResetEventSlim canReadEvent;
       private readonly ManualResetEventSlim canWriteEvent;
       private readonly ManualResetEventSlim disposedEvent;
       private bool disposed;
+
 
       public Buffer()
       {
@@ -55,7 +58,7 @@ namespace Sherlock
 
       public void Put(T item)
       {
-         Put(TimeOut.Indefinite, item);
+         Put(indefinite, item);
       }
 
       public void Put(TimeSpan timeout, T item)
@@ -69,7 +72,7 @@ namespace Sherlock
 
       public bool TryPut(T item)
       {
-         return TryPut(TimeOut.Indefinite, item);
+         return TryPut(indefinite, item);
       }
 
       public bool TryPut(TimeSpan timeout, T item)
@@ -112,7 +115,7 @@ namespace Sherlock
 
       public T Take()
       {
-         return Take(TimeOut.Indefinite);
+         return Take(indefinite);
       }
 
       public T Take(TimeSpan timeout)
@@ -130,7 +133,7 @@ namespace Sherlock
 
       public bool TryTake(out T item)
       {
-         return TryTake(TimeOut.Indefinite, out item);
+         return TryTake(indefinite, out item);
       }
 
       public bool TryTake(TimeSpan timeout, out T item)

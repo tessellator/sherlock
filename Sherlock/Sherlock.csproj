@@ -54,7 +54,6 @@
     <Compile Include="PipeWriter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SlidingBuffer.cs" />
-    <Compile Include="Timeout.cs" />
     <Compile Include="UnboundedBuffer.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
