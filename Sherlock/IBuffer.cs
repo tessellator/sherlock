@@ -6,8 +6,19 @@ namespace Sherlock
     /// Represents a value buffer.
     /// </summary>
     /// <typeparam name="T">
-    /// The type of values to store.
+    /// The type of value to store.
     /// </typeparam>
+    ///
+    /// <remarks>
+    /// <p>The purpose of a buffer is to provide a thread blocking strategy that
+    /// is appropriate for a particular use.  Examples include a bounded buffer
+    /// that blocks writes when full, a dropping buffer that ignores new values
+    /// when full, and a sliding buffer that keeps a maximum sliding window of 
+    /// values.</p>
+    /// 
+    /// <p>Note that read operations should always block when the buffer
+    /// is empty.</p>
+    /// </remarks>
     public interface IBuffer<T> : IDisposable
     {
         /// <summary>
