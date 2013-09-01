@@ -15,8 +15,14 @@ namespace Sherlock
             this.current = default(T);
         }
 
+        ~PipedEnumerator()
+        {
+            Dispose();
+        }
+
         public void Dispose()
         {
+            reader.Close();
         }
 
         public T Current
