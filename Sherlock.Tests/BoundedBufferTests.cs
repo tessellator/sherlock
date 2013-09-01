@@ -45,7 +45,7 @@ namespace Sherlock.Tests
             boundedBuffer.Put(5);
             boundedBuffer.Put(5);
 
-            var success = boundedBuffer.TryPut(timeout, 5);
+            var success = boundedBuffer.TryPut(5, timeout);
 
             Assert.IsFalse(success);
         }
@@ -53,7 +53,7 @@ namespace Sherlock.Tests
         [Test]
         public void TryPut_WithEmptyBuffer()
         {
-           var success = boundedBuffer.TryPut(timeout, 42);
+            var success = boundedBuffer.TryPut(42, timeout);
 
            Assert.IsTrue(success);
            Assert.AreEqual(42, boundedBuffer.Take());

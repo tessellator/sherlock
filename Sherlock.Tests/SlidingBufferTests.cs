@@ -42,14 +42,14 @@ namespace Sherlock.Tests
         [Test]
         public void Put_WhenQueueIsFull_ReturnsTrue()
         {
-           var success = buffer.TryPut(timeout, 4);
+            var success = buffer.TryPut(4, timeout);
            Assert.IsTrue(success);
         }
 
         [Test]
         public void Put_WhenQueueIsFull_SlidesQueue()
         {
-           buffer.TryPut(timeout, 4);
+            buffer.TryPut(4, timeout);
            CollectionAssert.AreEquivalent(new[] { 2, 3, 4 }, buffer.GetAllValues());
         }
     }

@@ -1,12 +1,9 @@
 using System;
-using System.Linq;
 using System.Collections.Generic;
-using Sherlock;
-using System.Threading;
 
 namespace Sherlock
 {
-   public class SlidingBuffer<T> : Buffer<T>
+   public sealed class SlidingBuffer<T> : Buffer<T>
    {
       private readonly long maxSize;
 

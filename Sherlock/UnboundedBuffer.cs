@@ -1,7 +1,7 @@
 ﻿
 namespace Sherlock
 {
-   public class UnboundedBuffer<T> : BoundedBuffer<T>
+   public sealed class UnboundedBuffer<T> : BoundedBuffer<T>
    {
 
       public UnboundedBuffer()

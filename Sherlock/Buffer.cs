@@ -66,24 +66,24 @@ namespace Sherlock
 
       public void Put(T item)
       {
-         Put(indefinite, item);
+          Put(item, indefinite);
       }
 
-      public void Put(TimeSpan timeout, T item)
+      public void Put(T item, TimeSpan timeout)
       {
          if (disposed)
             throw new ObjectDisposedException("The buffer has been disposed");
 
-         if (!TryPut(timeout, item))
+         if (!TryPut(item, timeout))
             throw new InvalidOperationException("The put operation failed");
       }
 
       public bool TryPut(T item)
       {
-         return TryPut(indefinite, item);
+          return TryPut(item, indefinite);
       }
 
-      public bool TryPut(TimeSpan timeout, T item)
+      public bool TryPut(T item, TimeSpan timeout)
       {
          if (disposed || !CheckCanPut(timeout)) return false;
 

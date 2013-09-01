@@ -70,7 +70,7 @@ namespace Sherlock.Tests
       public void Put_AfterDispose_ThrowsException()
       {
          buffer.Dispose();
-         buffer.Put(timeout, 42);
+         buffer.Put(42, timeout);
       }
 
       [Test]
@@ -78,7 +78,7 @@ namespace Sherlock.Tests
       public void Put_OnFail_ThrowsException()
       {
          buffer.SetCanPut(false);
-         buffer.Put(timeout, 42);
+         buffer.Put(42, timeout);
       }
 
       [Test]
@@ -93,21 +93,21 @@ namespace Sherlock.Tests
       public void TryPut_WhenCannotPut_ReturnsFalse()
       {
          buffer.SetCanPut(false);
-         var success = buffer.TryPut(timeout, 42);
+         var success = buffer.TryPut(42, timeout);
          Assert.IsFalse(success);
       }
 
       [Test]
       public void TryPut_CallsImplCanPut()
       {
-         buffer.TryPut(timeout, 42);
+          buffer.TryPut(42, timeout);
          Assert.AreEqual(1, buffer.TimesCanPutCalled());
       }
 
       [Test]
       public void TryPut_CallsImplPut()
       {
-         buffer.TryPut(timeout, 42);
+          buffer.TryPut(42, timeout);
          Assert.AreEqual(1, buffer.TimesPutCalled());
          Assert.IsTrue(buffer.PutCalledWith(42));
       }
@@ -115,7 +115,7 @@ namespace Sherlock.Tests
       [Test]
       public void TryPut_OnSuccess_ReturnsTrue()
       {
-         var success = buffer.TryPut(timeout, 42);
+          var success = buffer.TryPut(42, timeout);
          Assert.IsTrue(success);
       }
 

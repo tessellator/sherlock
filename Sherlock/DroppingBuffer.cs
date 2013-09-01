@@ -7,7 +7,7 @@ using Sherlock;
 
 namespace Sherlock
 {
-   public class DroppingBuffer<T> : Buffer<T>
+   public sealed class DroppingBuffer<T> : Buffer<T>
    {
       private readonly long maxSize;
 
