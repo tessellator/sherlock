@@ -9,6 +9,7 @@ namespace Sherlock
     {
         private readonly IBuffer<T> buffer;
         private bool isClosed;
+        private bool readyToClose;
 
         public event EventHandler Closed;
 
@@ -25,6 +26,9 @@ namespace Sherlock
 
         public bool Read(out T item)
         {
+           if (buffer.IsEmpty() && readyToClose)
+              Close();
+
             item = default(T);
             return !IsClosed && buffer.TryTake(out item);
         }
@@ -40,10 +44,13 @@ namespace Sherlock
 
             isClosed = true;
 
-            buffer.Dispose();
-
             if (Closed != null)
                 Closed(this, EventArgs.Empty);
+        }
+
+        public void SetWriteCloseListener(PipeWriter<T> writer)
+        {
+           writer.Closed += (o, e) => { readyToClose = true; };
         }
     }
 }

@@ -40,16 +40,17 @@ namespace Sherlock.Tests
                 {
                     for (int i = 0; i < 10; i++)
                         pipe.Writer.Write(i);
+
+                    pipe.Writer.Close();
                 };
             consumer = () =>
                 {
-                    for (int i = 0; i < 10; i++)
-                    {
-                        int item;
-                        pipe.Reader.Read(out item);
-                        result += item;
-                        Thread.Sleep(50);
-                    }
+                   int item;
+                   while (pipe.Reader.Read(out item))
+                   {
+                      result += item;
+                      Thread.Sleep(5);
+                   }
                     doneEvent.Set();
                 };
 

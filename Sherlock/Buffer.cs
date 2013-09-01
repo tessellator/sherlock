@@ -51,6 +51,14 @@ namespace Sherlock
          disposed = true;
       }
 
+      public bool IsEmpty()
+      {
+         lock (locker)
+         {
+            return queue.Count == 0;
+         }
+      }
+
       protected virtual bool CanPut(Queue<T> queue)
       {
          return true;

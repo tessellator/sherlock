@@ -15,5 +15,7 @@ namespace Sherlock
         bool TryTake(out T item);
         bool TryPut(TimeSpan timeout, T item);
         bool TryTake(TimeSpan timeout, out T item);
+
+        bool IsEmpty();
     }
 }

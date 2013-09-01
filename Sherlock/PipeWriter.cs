@@ -36,7 +36,6 @@ namespace Sherlock
             if (isClosed) return;
 
             isClosed = true;
-            buffer.Dispose();
 
             if (Closed != null)
                 Closed(this, EventArgs.Empty);
