@@ -61,14 +61,15 @@ namespace Sherlock
         /// </remarks>
         protected virtual void Dispose(bool disposing)
         {
+            disposedEvent.Set();
+
             if (disposing && !disposed)
             {
-                disposedEvent.Set();
                 disposedEvent.Dispose();
                 canWriteEvent.Dispose();
                 canReadEvent.Dispose();
+                disposed = true;
             }
-            disposed = true;
         }
 
         /// <summary>

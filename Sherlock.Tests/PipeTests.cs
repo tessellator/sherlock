@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
+
 using NUnit.Framework;
-using Sherlock;
 
 namespace Sherlock.Tests
 {
@@ -44,12 +41,12 @@ namespace Sherlock.Tests
                 };
             consumer = () =>
                 {
-                   int item;
-                   while (pipe.Reader.Read(out item))
-                   {
-                      result += item;
-                      Thread.Sleep(5);
-                   }
+                    int item;
+                    while (pipe.Reader.Read(out item))
+                    {
+                        result += item;
+                        Thread.Sleep(5);
+                    }
                     doneEvent.Set();
                 };
 
@@ -75,10 +72,10 @@ namespace Sherlock.Tests
                 };
             consumer = () =>
                 {
-                   int item;
+                    int item;
 
-                   while (pipe.Reader.Read(out item))
-                      result += item;
+                    while (pipe.Reader.Read(out item))
+                        result += item;
 
                     doneEvent.Set();
                 };
@@ -87,6 +84,39 @@ namespace Sherlock.Tests
             doneEvent.WaitOne();
 
             Assert.AreEqual(45, result);
+        }
+
+        [Test]
+        public void Test_ReaderClosedFirst()
+        {
+            int result = 0;
+            producer = () =>
+                {
+                    for (int i = 0; i < 10; i++)
+                        pipe.Writer.Write(i);
+
+                    pipe.Writer.Close();
+                    doneEvent.Set();
+                };
+            consumer = () =>
+                {
+                    int item;
+
+                    for (int i = 0; i < 5; i++)
+                    {
+                        if (!pipe.Reader.Read(out item))
+                            break;
+
+                        result += item;
+                    }
+
+                    pipe.Reader.Close();
+                };
+
+            ParallelThread.Invoke(producer, consumer);
+            doneEvent.WaitOne();
+
+            Assert.AreEqual(10, result);
         }
     }
 }

@@ -19,9 +19,9 @@ namespace Sherlock.Tests
         [Test]
         public void DefaultCtor_ProperlySetsMaxSize()
         {
-           var buffer = new BoundedBuffer<int>();
+            var buffer = new BoundedBuffer<int>();
 
-           Assert.AreEqual(100, buffer.MaxSize);
+            Assert.AreEqual(100, buffer.MaxSize);
         }
 
         [Test]
@@ -36,7 +36,7 @@ namespace Sherlock.Tests
         [Test]
         public void Ctor_ProperlySetsMaxSize()
         {
-           Assert.AreEqual(2, boundedBuffer.MaxSize);
+            Assert.AreEqual(2, boundedBuffer.MaxSize);
         }
 
         [Test]
@@ -55,8 +55,8 @@ namespace Sherlock.Tests
         {
             var success = boundedBuffer.TryPut(42, timeout);
 
-           Assert.IsTrue(success);
-           Assert.AreEqual(42, boundedBuffer.Take());
+            Assert.IsTrue(success);
+            Assert.AreEqual(42, boundedBuffer.Take());
         }
     }
 }
